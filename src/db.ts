@@ -8,6 +8,7 @@ const pool = mysql.createPool({
   password: config.sqlConfig.password,
   database: config.sqlConfig.databaseName,
   connectionLimit: 10,
+  port: config.sqlConfig.port,
 });
 
 export default pool.promise();
