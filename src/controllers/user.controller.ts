@@ -1,22 +1,18 @@
 import {Request, Response} from 'express';
-import db from '../db';
-import {User} from '../models/user.model';
 
-export const getUsers = async (_req: Request, res: Response) => {
-  try {
-    const [rows] = await db.query('SELECT * FROM users');
-    res.json(rows);
-  } catch (error) {
-    res.status(500).json({message: 'Error fetching users'});
-  }
-};
+import {fetchUserByToken} from '../database/users/users.db.service';
 
-export const createUser = async (req: Request, res: Response) => {
-  const {name, email} = req.body as User;
+export const authorizeUserToken = async (req: Request, res: Response) => {
+  const {token} = req.query;
   try {
-    await db.query('INSERT INTO users (name, email) VALUES (?, ?)', [name, email]);
-    res.status(201).json({message: 'User created'});
+    const user = await fetchUserByToken(token as string);
+
+    if (!user) {
+      res.status(401).send({message: 'UnAuthorized', data: null});
+    } else {
+      res.status(200).send({data: user});
+    }
   } catch (error) {
-    res.status(500).json({message: 'Error creating user'});
+    res.status(500).send({message: 'Error authorizing user', data: null});
   }
 };
