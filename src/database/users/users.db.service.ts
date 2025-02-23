@@ -1,26 +1,40 @@
 import {RowDataPacket} from 'mysql2';
-import {User} from '../../models/user.model';
 import db from '../../db';
-import {usersTable} from './users.db.table';
+import {usersTable, UsersTableRow} from './users.db.table';
 
-function readUser(row: RowDataPacket): User {
+function readUser(row: RowDataPacket): UsersTableRow {
   if (!row) return null;
 
-  const {id, first_name, last_name, token, profile_image, role, source, email, password} = row;
+  const {id, first_name, last_name, token, token_expiry, profile_image, role, source, email, password, status} = row;
   return {
     id,
-    firstName: first_name,
-    lastName: last_name,
+    first_name,
+    last_name,
     token,
-    profileImage: profile_image,
+    profile_image,
     role,
     source,
     email,
     password,
+    status,
+    token_expiry,
   };
 }
 
-export async function fetchUserByToken(token: string): Promise<User> {
+export async function fetchUserByToken(token: string): Promise<UsersTableRow> {
   const [result] = await db.query<RowDataPacket[]>(`SELECT * FROM ${usersTable.tableName} WHERE ${usersTable.columns.token}=?`, [token]);
-  return readUser(result[0]);
+  const user = readUser(result[0]);
+
+  if (!user) return null;
+
+  //if token expiry is lower than now, remove the token
+  if (user.token_expiry <= new Date()) {
+    db.query(
+      `UPDATE ${usersTable.tableName} SET ${usersTable.columns.token}=NULL, ${usersTable.columns.tokenExpiry}=NULL WHERE ${usersTable.columns.id} = ${user.id}`,
+    );
+
+    return null;
+  }
+
+  return user;
 }

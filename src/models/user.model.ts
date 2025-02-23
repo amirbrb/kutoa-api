@@ -8,6 +8,12 @@ export enum UserSource {
   Google = 2,
 }
 
+export enum UserStatus {
+  Active = 1,
+  Inactive = 2,
+  Pending = 3,
+}
+
 export interface User {
   id: number;
   firstName: string;
@@ -18,4 +24,5 @@ export interface User {
   source: UserSource;
   email: string;
   password?: string;
+  status: UserStatus;
 }
