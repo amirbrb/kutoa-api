@@ -1,9 +1,9 @@
-import {Request, Response} from 'express';
+import { Request, Response } from 'express';
 
-import {fetchUserByToken} from '../database/users/users.db.service';
+import { fetchUserByToken } from '../database/users/users.db.service';
 
 export const authorizeUserToken = async (req: Request, res: Response) => {
-  const {token} = req.query;
+  const {token} = req.params;
   try {
     const user = await fetchUserByToken(token as string);
 
