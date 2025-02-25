@@ -18,7 +18,6 @@ export interface User {
   id: number;
   firstName: string;
   lastName: string;
-  token?: string;
   profileImage?: string;
   role: UserRole;
   source: UserSource;
