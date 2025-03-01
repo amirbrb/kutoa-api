@@ -1,6 +1,6 @@
 export enum UserRole {
-  ADMIN = 1,
-  USER = 2,
+  Admin = 1,
+  User = 2,
 }
 
 export enum UserSource {
