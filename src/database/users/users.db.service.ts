@@ -83,12 +83,7 @@ async function refreshUserToken(email: string) {
 }
 
 async function updateUserStatus(email: string, status: UserStatus) {
-  const token = generateToken();
-  const tokenExpiry = generateTokenExpiry();
-  await db.query(
-    `UPDATE ${usersTable.tableName} SET ${usersTable.columns.status} = ?, ${usersTable.columns.token} = ?, ${usersTable.columns.tokenExpiry} = ? WHERE ${usersTable.columns.email} = ?`,
-    [status, token, tokenExpiry, email],
-  );
+  await db.query(`UPDATE ${usersTable.tableName} SET ${usersTable.columns.status} = ? WHERE ${usersTable.columns.email} = ?`, [status, email]);
 }
 
 export const usersDbService = {
@@ -96,5 +91,5 @@ export const usersDbService = {
   fetchUserByToken,
   addUserToDb,
   refreshUserToken,
-  updateUserStatus
+  updateUserStatus,
 };

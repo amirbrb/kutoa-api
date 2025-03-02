@@ -127,7 +127,8 @@ const verifyEmail = async (req: Request<{email: string; token: string}>, res: Co
       res.status(401).send({message: 'Invalid token'});
     } else {
       await usersDbService.updateUserStatus(email, UserStatus.Active);
-      res.status(200).send({message: 'Email verified successfully', data: {user: toUI(userData), token: userData.token}});
+      const {token: newToken} = await usersDbService.refreshUserToken(email);
+      res.status(200).send({message: 'Email verified successfully', data: {user: toUI(userData), token: newToken}});
     }
   } catch (error) {
     res.status(401).send({message: toUserError(error as Error)});
