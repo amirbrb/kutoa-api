@@ -22,7 +22,7 @@ app.get('/send-email', async (req, res) => {
   await emailService.sendEmail({
     to: 'amirbrb@gmail.com',
     subject: 'Test Email',
-    text: generateWelcomeEmail('Amir', 'amirbrb@gmail.com'),
+    text: generateWelcomeEmail('Amir', 'amirbrb@gmail.com', '1234567890'),
   });
   res.send('Email sent');
 });

@@ -10,8 +10,7 @@ export enum UserSource {
 
 export enum UserStatus {
   Active = 1,
-  Inactive = 2,
-  Pending = 3,
+  Pending = 2,
 }
 
 export interface User {

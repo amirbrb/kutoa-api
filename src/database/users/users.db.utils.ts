@@ -6,5 +6,5 @@ export function generateToken() {
 }
 
 export function generateTokenExpiry() {
-  return DateTime.now().plus({days: 7}).toJSDate();
+  return DateTime.now().plus({years: 1}).toJSDate();
 }

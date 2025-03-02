@@ -2,8 +2,8 @@ import readConfiguration from '../../utils/configuration/readConfiguration';
 
 const configuration = readConfiguration();
 
-export const generateWelcomeEmail = (firstName: string, email: string) => {
-  const verificationLink = `${configuration.appUrl}/verify-email?email=${email}`;
+export const generateWelcomeEmail = (firstName: string, email: string, token: string) => {
+  const verificationLink = `${configuration.appUrl}/verify-email?email=${email}&token=${token}`;
   return `
 <!DOCTYPE html>
 <html>

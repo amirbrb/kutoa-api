@@ -1,40 +1,31 @@
-const fs = require('fs').promises;
-const path = require('path');
-const {google} = require('googleapis');
+import readConfiguration from '../utils/configuration/readConfiguration';
+import nodemailer from 'nodemailer';
 
-const TOKEN_PATH = path.join(process.cwd(), '../', 'gmail.token.json');
-
-async function loadCredentials() {
-  try {
-    const content = await fs.readFile(TOKEN_PATH);
-    const credentials = JSON.parse(content);
-    return google.auth.fromJSON(credentials);
-  } catch (err) {
-    return null;
-  }
-}
+const configuration = readConfiguration();
 
 async function sendEmail({to, subject, text}: {to: string; subject: string; text: string}) {
-  const auth = await loadCredentials();
-  const gmail = google.gmail({version: 'v1', auth});
-  const emailLines = [
-    'From: messanger.kutoa@gmail.com',
-    `To: ${to}`,
-    'Content-type: text/html;charset=iso-8859-1',
-    'MIME-Version: 1.0',
-    `Subject: ${subject}`,
-    '',
-    `${text}`,
-  ];
-
-  const email = emailLines.join('\r\n').trim();
-  const base64Email = Buffer.from(email).toString('base64');
-  await gmail.users.messages.send({
-    userId: 'messanger.kutoa@gmail.com',
-    requestBody: {
-      raw: base64Email,
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'messanger.kutoa@gmail.com', // Your Gmail
+      pass: configuration.emailConfig.appPassword, // App Password (Not your Gmail password)
     },
   });
+
+  // Email options
+  const mailOptions = {
+    from: 'messanger.kutoa@gmail.com',
+    to,
+    subject,
+    html: text,
+  };
+
+  try {
+    const info = await transporter.sendMail(mailOptions);
+    console.log('Email sent: ' + info.response);
+  } catch (error) {
+    console.error('Error sending email:', error);
+  }
 }
 
 export const emailService = {sendEmail};

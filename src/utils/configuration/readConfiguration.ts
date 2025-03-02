@@ -13,11 +13,8 @@ export interface Configuration {
     databaseName: string;
     port: number;
   };
-  gmailConfig: {
-    clientId: string;
-    clientSecret: string;
-    redirectUri: string;
-    refreshToken: string;
+  emailConfig: {
+    appPassword: string;
   };
 }
 
