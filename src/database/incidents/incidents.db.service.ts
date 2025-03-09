@@ -90,7 +90,9 @@ async function addIncident(title: string, description: string, userId: number, l
   }
 }
 
-export const incidentsDbService = {
+const incidentsDbService = {
   getIncidentsWithinRange,
   addIncident,
 };
+
+export default incidentsDbService;

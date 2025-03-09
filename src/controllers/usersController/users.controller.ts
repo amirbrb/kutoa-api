@@ -1,27 +1,29 @@
 import {Request} from 'express';
 
 import {User, UserRole, UserSource, UserStatus} from '../../models/user.model';
-import {usersDbService} from '../../database/users/users.db.service';
-import {getRequestToken} from '../../utils/common/getRequestToken';
+import usersDbService from '../../database/users/users.db.service';
+import getRequestToken from '../../utils/common/getRequestToken';
 import {ControllerResponse, ErrorResponse} from '../../models/response.types';
 import {toUserError} from '../controller.base';
-import {emailService} from '../../messaging/email.service';
-import {generateWelcomeEmail} from '../../messaging/utils/generateWelcomeEmail';
+import emailService from '../../messaging/email.service';
+import generateWelcomeEmail from '../../messaging/utils/generateWelcomeEmail';
 import {LoginStatus} from './users.controller.enums';
 import {UsersTableRow} from '../../database/users/users.db.table';
 
-const toUserUI = (userRow: UsersTableRow): User => ({
-  id: userRow.id,
-  firstName: userRow.first_name,
-  lastName: userRow.last_name,
-  email: userRow.email,
-  role: userRow.role,
-  source: userRow.source,
-  status: userRow.status,
-  profileImage: userRow.profile_image,
-});
+function toUserUI(userRow: UsersTableRow): User {
+  return {
+    id: userRow.id,
+    firstName: userRow.first_name,
+    lastName: userRow.last_name,
+    email: userRow.email,
+    role: userRow.role,
+    source: userRow.source,
+    status: userRow.status,
+    profileImage: userRow.profile_image,
+  };
+}
 
-const getCurrentUser = async (req: Request, res: ControllerResponse<User>) => {
+async function getCurrentUser(req: Request, res: ControllerResponse<User>) {
   const token = getRequestToken(req);
   try {
     const user = await usersDbService.fetchUserByToken(token as string);
@@ -36,9 +38,9 @@ const getCurrentUser = async (req: Request, res: ControllerResponse<User>) => {
   } catch (error) {
     res.status(500).send({message: toUserError(error as Error)});
   }
-};
+}
 
-const signupUsingGoogle = async (req: Request<User>, res: ControllerResponse<{user: User; token: string}>) => {
+async function signupUsingGoogle(req: Request<User>, res: ControllerResponse<{user: User; token: string}>) {
   const user = req.body;
   try {
     const currentUser = await usersDbService.fetchUserByEmail(user.email);
@@ -61,9 +63,9 @@ const signupUsingGoogle = async (req: Request<User>, res: ControllerResponse<{us
   } catch (error) {
     res.status(500).send({message: toUserError(error as Error)});
   }
-};
+}
 
-const signup = async (req: Request<User>, res: ControllerResponse<void | ErrorResponse>) => {
+async function signup(req: Request<User>, res: ControllerResponse<void | ErrorResponse>) {
   const {email, password, firstName, lastName, profileImage} = req.body;
   try {
     const user = await usersDbService.fetchUserByEmail(email);
@@ -82,9 +84,9 @@ const signup = async (req: Request<User>, res: ControllerResponse<void | ErrorRe
   } catch (error) {
     res.status(500).send({message: toUserError(error as Error)});
   }
-};
+}
 
-const login = async (req: Request<{email: string; password: string}>, res: ControllerResponse<{user: User; token: string}>) => {
+async function login(req: Request<{email: string; password: string}>, res: ControllerResponse<{user: User; token: string}>) {
   const {email, password} = req.body;
   try {
     const user = await usersDbService.fetchUserByEmail(email);
@@ -102,9 +104,9 @@ const login = async (req: Request<{email: string; password: string}>, res: Contr
   } catch (error) {
     res.status(500).send({message: toUserError(error as Error)});
   }
-};
+}
 
-const loginUsingGoogle = async (req: Request, res: ControllerResponse<{user: User; token: string}>) => {
+async function loginUsingGoogle(req: Request, res: ControllerResponse<{user: User; token: string}>) {
   const {email} = req.body;
   try {
     const userData = await usersDbService.fetchUserByEmail(email);
@@ -118,9 +120,9 @@ const loginUsingGoogle = async (req: Request, res: ControllerResponse<{user: Use
   } catch (error) {
     res.status(500).send({message: toUserError(error as Error)});
   }
-};
+}
 
-const verifyEmail = async (req: Request<{email: string; token: string}>, res: ControllerResponse<{user: User; token: string}>) => {
+async function verifyEmail(req: Request<{email: string; token: string}>, res: ControllerResponse<{user: User; token: string}>) {
   const {email, token} = req.body;
   try {
     const userData = await usersDbService.fetchUserByEmail(email);
@@ -136,9 +138,9 @@ const verifyEmail = async (req: Request<{email: string; token: string}>, res: Co
   } catch (error) {
     res.status(401).send({message: toUserError(error as Error)});
   }
-};
+}
 
-const resendVerificationEmail = async (req: Request<{email: string}>, res: ControllerResponse<void | ErrorResponse>) => {
+async function resendVerificationEmail(req: Request<{email: string}>, res: ControllerResponse<void | ErrorResponse>) {
   const {email} = req.body;
   try {
     const user = await usersDbService.fetchUserByEmail(email);
@@ -159,7 +161,7 @@ const resendVerificationEmail = async (req: Request<{email: string}>, res: Contr
   } catch (error) {
     res.status(500).send({message: toUserError(error as Error)});
   }
-};
+}
 
 export const usersController = {
   getCurrentUser,

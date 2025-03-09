@@ -1,4 +1,4 @@
-export const generateWelcomeEmail = (firstName: string, email: string, token: string, host: string) => {
+function generateWelcomeEmail(firstName: string, email: string, token: string, host: string) {
   const verificationLink = `${host}/verify-email?email=${email}&token=${token}`;
   return `
   <!DOCTYPE html>
@@ -32,4 +32,6 @@ export const generateWelcomeEmail = (firstName: string, email: string, token: st
     </div>
   </body>
   </html>`;
-};
+}
+
+export default generateWelcomeEmail;

@@ -1,22 +1,24 @@
 import {Response} from 'express';
-import {incidentsDbService} from '../../database/incidents/incidents.db.service';
+import incidentsDbService from '../../database/incidents/incidents.db.service';
 import {Incident} from '../../models/incidents.models';
 import {IncidentsTableRow, IncidentsTableRowWithUserDetails} from '../../database/incidents/incidents.db.table';
 import {AuthRequest} from '../../models/request.types';
 
-const toUI = (incident: IncidentsTableRowWithUserDetails | IncidentsTableRow): Incident => ({
-  id: incident.id,
-  title: incident.title,
-  description: incident.content,
-  status: incident.status,
-  createdAt: incident.created_at,
-  userDetails: 'userDetails' in incident && {
-    id: incident.user_id,
-    firstName: incident.userDetails.firstName,
-    lastName: incident.userDetails.lastName,
-    profileImage: incident.userDetails.profileImage,
-  },
-});
+function toUI(incident: IncidentsTableRowWithUserDetails | IncidentsTableRow): Incident {
+  return {
+    id: incident.id,
+    title: incident.title,
+    description: incident.content,
+    status: incident.status,
+    createdAt: incident.created_at,
+    userDetails: 'userDetails' in incident && {
+      id: incident.user_id,
+      firstName: incident.userDetails.firstName,
+      lastName: incident.userDetails.lastName,
+      profileImage: incident.userDetails.profileImage,
+    },
+  };
+}
 
 async function getIncidentsByLocation(req: AuthRequest, res: Response) {
   try {

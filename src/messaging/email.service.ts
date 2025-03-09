@@ -26,4 +26,6 @@ async function sendEmail({to, subject, text}: {to: string; subject: string; text
   }
 }
 
-export const emailService = {sendEmail};
+const emailService = {sendEmail};
+
+export default emailService;

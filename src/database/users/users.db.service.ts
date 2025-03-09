@@ -86,10 +86,12 @@ async function updateUserStatus(email: string, status: UserStatus) {
   await db.query(`UPDATE ${usersTable.tableName} SET ${usersTable.columns.status} = ? WHERE ${usersTable.columns.email} = ?`, [status, email]);
 }
 
-export const usersDbService = {
+const usersDbService = {
   fetchUserByEmail,
   fetchUserByToken,
   addUserToDb,
   refreshUserToken,
   updateUserStatus,
 };
+
+export default usersDbService;
