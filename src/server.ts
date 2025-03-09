@@ -5,6 +5,7 @@ import {log} from 'console';
 import incidentsRoutes from './routes/incidents.routes';
 import config from './configuration/config';
 import {emailService} from './messaging/email.service';
+import {generateWelcomeEmail} from './messaging/utils/generateWelcomeEmail';
 
 const app = express();
 
@@ -21,13 +22,13 @@ app.use((req, _, next) => {
 });
 
 app.get('/email', (req, res) => {
+  log(req.headers);
   emailService.sendEmail({
     to: 'amirbrb@gmail.com',
-    subject: 'Test Email',
-    text: 'Hello World',
+    subject: 'Welcome to the Kutoa Community! 🎉',
+    text: generateWelcomeEmail('Amir', 'amirbrb@gmail.com', '1234567890', req.headers.origin),
   });
-
-  res.send('Hello World');
+  res.send('Email sent');
 });
 
 app.listen(config.port, () => {

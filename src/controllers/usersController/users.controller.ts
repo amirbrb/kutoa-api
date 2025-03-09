@@ -6,7 +6,7 @@ import {getRequestToken} from '../../utils/common/getRequestToken';
 import {ControllerResponse, ErrorResponse} from '../../models/response.types';
 import {toUserError} from '../controller.base';
 import {emailService} from '../../messaging/email.service';
-import {generateWelcomeEmail} from './users.controller.consts';
+import {generateWelcomeEmail} from '../../messaging/utils/generateWelcomeEmail';
 import {LoginStatus} from './users.controller.enums';
 import {UsersTableRow} from '../../database/users/users.db.table';
 
@@ -76,7 +76,7 @@ const signup = async (req: Request<User>, res: ControllerResponse<void | ErrorRe
     emailService.sendEmail({
       to: email,
       subject: 'Welcome to the Kutoa Community! 🎉',
-      text: generateWelcomeEmail(firstName, email, token),
+      text: generateWelcomeEmail(firstName, email, token, req.headers.origin),
     });
     res.status(200).send({message: 'User signed up successfully'});
   } catch (error) {
@@ -152,7 +152,7 @@ const resendVerificationEmail = async (req: Request<{email: string}>, res: Contr
     emailService.sendEmail({
       to: email,
       subject: 'Welcome to the Kutoa Community! 🎉',
-      text: generateWelcomeEmail(user.first_name, email, token),
+      text: generateWelcomeEmail(user.first_name, email, token, req.headers.origin),
     });
 
     res.status(200).send({message: 'Verification email sent successfully'});
