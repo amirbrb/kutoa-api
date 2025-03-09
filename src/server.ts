@@ -1,17 +1,12 @@
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
-
 import userRoutes from './routes/user.routes';
 import {log} from 'console';
 import incidentsRoutes from './routes/incidents.routes';
-import readConfiguration from './utils/configuration/readConfiguration';
-dotenv.config();
-const app = express();
-const {appUrl, port} = readConfiguration();
+import config from './configuration/config';
+import {emailService} from './messaging/email.service';
 
-console.log('appUrl', appUrl);
-console.log('port', port);
+const app = express();
 
 app.use(cors());
 app.use(express.json());
@@ -25,6 +20,16 @@ app.use((req, _, next) => {
   next();
 });
 
-app.listen(port, () => {
-  console.log(`Server is running on ${appUrl}`);
+app.get('/email', (req, res) => {
+  emailService.sendEmail({
+    to: 'amirbrb@gmail.com',
+    subject: 'Test Email',
+    text: 'Hello World',
+  });
+
+  res.send('Hello World');
+});
+
+app.listen(config.port, () => {
+  console.log(`Server is running on ${config.appUrl}`);
 });

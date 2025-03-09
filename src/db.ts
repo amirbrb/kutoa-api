@@ -1,6 +1,5 @@
 import mysql from 'mysql2';
-import readConfiguration from './utils/configuration/readConfiguration';
-const config = readConfiguration();
+import config from './configuration/config';
 
 const pool = mysql.createPool({
   host: config.sqlConfig.host,

@@ -1,14 +1,12 @@
-import readConfiguration from '../utils/configuration/readConfiguration';
+import config from '../configuration/config';
 import nodemailer from 'nodemailer';
-
-const configuration = readConfiguration();
 
 async function sendEmail({to, subject, text}: {to: string; subject: string; text: string}) {
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
       user: 'messanger.kutoa@gmail.com', // Your Gmail
-      pass: configuration.emailConfig.appPassword, // App Password (Not your Gmail password)
+      pass: config.emailConfig.appPassword, // App Password (Not your Gmail password)
     },
   });
 

@@ -1,15 +1,13 @@
-import readConfiguration from '../../utils/configuration/readConfiguration';
-
-const configuration = readConfiguration();
+import config from '../../configuration/config';
 
 export const generateWelcomeEmail = (firstName: string, email: string, token: string) => {
-  const verificationLink = `${configuration.appUrl}/verify-email?email=${email}&token=${token}`;
+  const verificationLink = `${config.appUrl}/verify-email?email=${email}&token=${token}`;
   return `
 <!DOCTYPE html>
 <html>
 <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
   <div style="text-align: center; margin-bottom: 30px;">
-    <img src="${configuration.appUrl}/logo.png" alt="Kutoa Logo" style="width: 120px; height: 120px; margin-bottom: 20px;">
+    <img src="${config.appUrl}/logo.png" alt="Kutoa Logo" style="width: 120px; height: 120px; margin-bottom: 20px;">
     <h1 style="color: #2c5282;">Welcome to the Kutoa Community! 🎉</h1>
   </div>
   
