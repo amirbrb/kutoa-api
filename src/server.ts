@@ -12,6 +12,9 @@ dotenv.config();
 const app = express();
 const {appUrl, port} = readConfiguration();
 
+console.log('appUrl', appUrl);
+console.log('port', port);
+
 app.use(cors());
 app.use(express.json());
 app.use(userRoutes);

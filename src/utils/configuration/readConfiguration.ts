@@ -24,8 +24,6 @@ interface AppConfiguration extends Configuration {
 }
 
 export default function readConfiguration(): AppConfiguration {
-  console.log('reading configuration', process.env);
-
   return {
     appUrl: `${process.env.APP_HOST}:${process.env.PORT}`,
     host: process.env.APP_HOST,
