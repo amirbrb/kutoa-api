@@ -11,7 +11,8 @@
     "build:dev": "node cli/createConfiguration.js development && tsc",
     "build:stage": "node cli/createConfiguration.js staging && tsc",
     "build:prod": "node cli/createConfiguration.js production && tsc",
-    "dev": "node cli/createConfiguration.js local && nodemon --watch \"./src\" --exec ts-node src/server.ts"
+    "dev": "node cli/createConfiguration.js local && nodemon --watch \"./src\" --exec ts-node src/server.ts",
+    "start": "node server.js"
   },
   "author": "",
   "license": "ISC",
