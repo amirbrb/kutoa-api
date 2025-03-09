@@ -2,11 +2,11 @@
   "name": "kutoa-api",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/server.js",
   "scripts": {
     "build": "tsc",
     "dev": "node nodemon --watch \"./src\" --exec ts-node src/server.ts",
-    "start": "node server.ts"
+    "start": "node dist/server.js"
   },
   "author": "",
   "license": "ISC",
