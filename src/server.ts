@@ -6,15 +6,16 @@ import userRoutes from './routes/user.routes';
 import {log} from 'console';
 import {emailService} from './messaging/email.service';
 import {generateWelcomeEmail} from './controllers/usersController/users.controller.consts';
-
+import incidentsRoutes from './routes/incidents.routes';
+import readConfiguration from './utils/configuration/readConfiguration';
 dotenv.config();
 const app = express();
-const port = process.env.PORT || 3000;
-const host = process.env.HOST || 'localhost';
+const {appUrl, port} = readConfiguration();
 
 app.use(cors());
 app.use(express.json());
 app.use(userRoutes);
+app.use(incidentsRoutes);
 
 log('Server is starting...');
 
@@ -27,13 +28,6 @@ app.get('/send-email', async (req, res) => {
   res.send('Email sent');
 });
 
-// Step 1: Generate and display the Google Auth URL
-app.use((req, _, next) => {
-  const logMessage = `${new Date().toISOString()} - ${req.method} ${req.url}`;
-  log(logMessage.trim());
-  next();
-});
-
 app.listen(port, () => {
-  console.log(`Server is running on ${host}:${port}`);
+  console.log(`Server is running on ${appUrl}`);
 });

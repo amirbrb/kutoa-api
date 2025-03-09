@@ -1,15 +1,16 @@
 import {Request} from 'express';
 
 import {User, UserRole, UserSource, UserStatus} from '../../models/user.model';
-import {UsersTableRow} from '../../database/users/users.db.table';
 import {usersDbService} from '../../database/users/users.db.service';
-import {getRequestToken} from '../utils/getRequestToken';
-import {ControllerResponse, ErrorResponse} from '../models/controllerResponse.types';
+import {getRequestToken} from '../../utils/common/getRequestToken';
+import {ControllerResponse, ErrorResponse} from '../../models/response.types';
 import {toUserError} from '../controller.base';
 import {emailService} from '../../messaging/email.service';
 import {generateWelcomeEmail} from './users.controller.consts';
 import {LoginStatus} from './users.controller.enums';
-const toUI = (userRow: UsersTableRow): User => ({
+import {UsersTableRow} from '../../database/users/users.db.table';
+
+const toUserUI = (userRow: UsersTableRow): User => ({
   id: userRow.id,
   firstName: userRow.first_name,
   lastName: userRow.last_name,
@@ -27,9 +28,11 @@ const getCurrentUser = async (req: Request, res: ControllerResponse<User>) => {
 
     if (!user) {
       res.status(401).send({message: 'UnAuthorized'});
-    } else {
-      res.status(200).send({data: toUI(user), message: 'User authorized successfully'});
+      return;
     }
+
+    const userUI = toUserUI(user);
+    res.status(200).send({data: userUI, message: 'User authorized successfully'});
   } catch (error) {
     res.status(500).send({message: toUserError(error as Error)});
   }
@@ -94,7 +97,7 @@ const login = async (req: Request<{email: string; password: string}>, res: Contr
     } else if (user.source !== UserSource.Local) {
       res.status(401).send({message: 'User is not registered with local account, try to login with Google', status: LoginStatus.LocalUser});
     } else {
-      res.status(200).send({data: {userData: toUI(user), token: user.token}, status: LoginStatus.Success});
+      res.status(200).send({data: {userData: toUserUI(user), token: user.token}, status: LoginStatus.Success});
     }
   } catch (error) {
     res.status(500).send({message: toUserError(error as Error)});
@@ -110,7 +113,7 @@ const loginUsingGoogle = async (req: Request, res: ControllerResponse<{user: Use
     } else if (userData.source !== UserSource.Google) {
       res.status(401).send({message: 'User is not registered with Google, try to login with email and password', status: LoginStatus.LocalUser});
     } else {
-      res.status(200).send({message: 'User logged in successfully', data: {user: toUI(userData), token: userData.token}});
+      res.status(200).send({message: 'User logged in successfully', data: {user: toUserUI(userData), token: userData.token}});
     }
   } catch (error) {
     res.status(500).send({message: toUserError(error as Error)});
@@ -128,7 +131,7 @@ const verifyEmail = async (req: Request<{email: string; token: string}>, res: Co
     } else {
       await usersDbService.updateUserStatus(email, UserStatus.Active);
       const {token: newToken} = await usersDbService.refreshUserToken(email);
-      res.status(200).send({message: 'Email verified successfully', data: {user: toUI(userData), token: newToken}});
+      res.status(200).send({message: 'Email verified successfully', data: {user: toUserUI(userData), token: newToken}});
     }
   } catch (error) {
     res.status(401).send({message: toUserError(error as Error)});

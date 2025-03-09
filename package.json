@@ -4,8 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "prebuild:dev": "node cli/createConfiguration.js development",
+    "prebuild:stage": "node cli/createConfiguration.js staging",
+    "prebuild:prod": "node cli/createConfiguration.js production",
     "build": "tsc",
-    "dev": "nodemon --watch \"./src\" --exec ts-node src/server.ts"
+    "build:dev": "node cli/createConfiguration.js development && tsc",
+    "build:stage": "node cli/createConfiguration.js staging && tsc",
+    "build:prod": "node cli/createConfiguration.js production && tsc",
+    "dev": "node cli/createConfiguration.js local && nodemon --watch \"./src\" --exec ts-node src/server.ts"
   },
   "author": "",
   "license": "ISC",
@@ -24,7 +30,6 @@
     "crypto": "^1.0.1",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
-    "googleapis": "^146.0.0",
     "luxon": "^3.5.0",
     "mysql": "^2.18.1",
     "mysql2": "^3.12.0",

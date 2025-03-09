@@ -5,7 +5,6 @@ export enum AppEnvironment {
 }
 
 export interface Configuration {
-  env: AppEnvironment;
   sqlConfig: {
     host: string;
     user: string;
@@ -20,13 +19,11 @@ export interface Configuration {
 
 interface AppConfiguration extends Configuration {
   appUrl: string;
+  port: number;
+  host: string;
 }
 
 export default function readConfiguration(): AppConfiguration {
-  const config = require('../../../../kutoa.server.config.json');
-
-  return {
-    ...config,
-    appUrl: `${config.env === AppEnvironment.Local ? 'http' : 'https'}://${config.env === AppEnvironment.Local ? 'localhost:3000' : 'kutoa-app.com'}`,
-  };
+  const config = require('../../app.config.json');
+  return JSON.parse(JSON.stringify(config));
 }
