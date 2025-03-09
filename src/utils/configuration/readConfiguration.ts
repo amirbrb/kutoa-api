@@ -27,9 +27,9 @@ export default function readConfiguration(): AppConfiguration {
   console.log('reading configuration', process.env);
 
   return {
-    appUrl: `${process.env.APP_HOST}:${process.env.APP_PORT}`,
+    appUrl: `${process.env.APP_HOST}:${process.env.PORT}`,
     host: process.env.APP_HOST,
-    port: parseInt(process.env.APP_PORT),
+    port: parseInt(process.env.PORT),
     sqlConfig: {
       host: process.env.SQL_HOST,
       user: process.env.SQL_USER,
