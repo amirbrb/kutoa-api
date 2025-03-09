@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "dev": "node nodemon --watch \"./src\" --exec ts-node src/server.ts",
-    "start": "node server.js"
+    "start": "node dist/server.js"
   },
   "author": "",
   "license": "ISC",
