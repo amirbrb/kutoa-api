@@ -4,14 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "prebuild:dev": "node cli/createConfiguration.js development",
-    "prebuild:stage": "node cli/createConfiguration.js staging",
-    "prebuild:prod": "node cli/createConfiguration.js production",
     "build": "tsc",
-    "build:dev": "node cli/createConfiguration.js development && tsc",
-    "build:stage": "node cli/createConfiguration.js staging && tsc",
-    "build:prod": "node cli/createConfiguration.js production && tsc",
-    "dev": "node cli/createConfiguration.js local && nodemon --watch \"./src\" --exec ts-node src/server.ts",
+    "dev": "node nodemon --watch \"./src\" --exec ts-node src/server.ts",
     "start": "node server.js"
   },
   "author": "",
